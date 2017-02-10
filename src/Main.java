@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -11,12 +10,10 @@ public class Main {
     static HashMap<String, ArrayList<Country>> hashMap = new HashMap();
     static ArrayList<Country> listOfAllCountries = new ArrayList<>();
 
-
-    public void scanFileIntoArray() throws FileNotFoundException {
+    public static void scanFileIntoArray() throws FileNotFoundException {
         File f = new File("countries.txt");
         Scanner fileScanner = new Scanner(f);
 
-        //puts all countries into an arraylist
         while(fileScanner.hasNext()){
             String line = fileScanner.nextLine();
             String[] columns = line.split("\\|");
@@ -28,7 +25,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        //asks user to type  single letter, throws exception if not single letter
+        scanFileIntoArray();
+
         System.out.println("Please enter a single letter:");
         Scanner letterScanner = new Scanner(System.in);
         String userEntered = letterScanner.nextLine();
@@ -50,16 +48,13 @@ public class Main {
             File g = new File(userEntered + "_countries.txt");
             FileWriter fw = new FileWriter(g);
             String growing = "";
-            int i = 0;
+
             for(Country country : listOfXCountries){
-                String aCountryName = listOfXCountries.get(i).getName();
-                growing = growing.concat(aCountryName);
+                growing = growing.concat(country.getName());
                 growing = growing.concat(", ");
-                i++;
             }
             fw.write(growing.substring(0, (growing.length()-2)));
             fw.close();
         }
-
     }
 }
