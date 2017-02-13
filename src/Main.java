@@ -11,30 +11,38 @@ public class Main {
     static ArrayList<Country> listOfCountries = new ArrayList<>();
 
     public static void scanFileIntoHashMap() throws FileNotFoundException {
+
         File f = new File("countries.txt");
         Scanner fileScanner = new Scanner(f);
 
-        String firstLetter = "a";
-        String lastFirstLetter;
+        String firstLetter = "";
+        String lastFirstLetter = "a";
+        Country country = new Country();
 
         while(fileScanner.hasNext()){
-            lastFirstLetter = firstLetter;
             String line = fileScanner.nextLine();
             String[] columns = line.split("\\|");
 
             firstLetter = columns[1].substring(0,1);
 
             if(firstLetter.equalsIgnoreCase(lastFirstLetter)){
-                Country country = new Country(columns[0], columns[1]);
+                country = new Country(columns[0], columns[1]);
                 listOfCountries.add(country);
             }
-            else{
+            else if (!(firstLetter.equalsIgnoreCase(lastFirstLetter))){
                 Atlas.put(lastFirstLetter, listOfCountries);
-                listOfCountries.clear();
-                Country country = new Country(columns[0], columns[1]);
+
+                listOfCountries = new ArrayList<>();
+                //listOfCountries.clear();
+
+                country = new Country(columns[0], columns[1]);
                 listOfCountries.add(country);
             }
+            lastFirstLetter = firstLetter;
         }
+        listOfCountries.add(country);
+        Atlas.put(lastFirstLetter, listOfCountries);
+
         fileScanner.close();
     }
 
@@ -47,24 +55,17 @@ public class Main {
         String userEntered = letterScanner.nextLine();
         letterScanner.close();
 
-        ArrayList<Country> listOfXCountries = new ArrayList<>();
-
         if(userEntered.length() != 1){
             throw new Exception("Single letter error.");
         }
         else if(userEntered.length() == 1){
-            for (Country country : listOfCountries){
-                if(userEntered.equalsIgnoreCase(country.getName().substring(0,1))){
-                    listOfXCountries.add(country);
-                }
-            }
-            Atlas.put(userEntered, listOfXCountries);
-
             File g = new File(userEntered + "_countries.txt");
             FileWriter fw = new FileWriter(g);
             String growing = "";
 
-            for(Country country : listOfXCountries){
+
+            ArrayList<Country> temp = Atlas.get(userEntered);
+            for(Country country : temp){
                 growing = growing.concat(country.getName());
                 growing = growing.concat(", ");
             }
