@@ -63,11 +63,9 @@ public class Main {
             FileWriter fw = new FileWriter(g);
             String growing = "";
 
-
             ArrayList<Country> temp = Atlas.get(userEntered);
             for(Country country : temp){
-                growing = growing.concat(country.getName());
-                growing = growing.concat(", ");
+                growing = growing.concat(country.getName()).concat(", ");
             }
             fw.write(growing.substring(0, (growing.length()-2)));
             fw.close();
